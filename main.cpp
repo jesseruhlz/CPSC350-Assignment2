@@ -40,29 +40,65 @@ int main(int argc, char ** argv)
       cout << "Enter a valid number: "<< endl;
     }
 
-    //creating matrix with user Input
-    // needs to randomly allocate '-' and 'X'
-    // with 'X' being placed randomly using the population density
+
     char a[numRows][numColumns];
 
+    //to find amount of full cells in the user generated matrix
+    int amountFullCells;
+    amountFullCells = (numRows * numColumns) * initialPopulationDensity;
+    cout << amountFullCells << endl;
+
     srand((unsigned)time(NULL));
+    //creates the matrix with the given input to form the size
+    //initializes the matrix with '-', representing empty cells
+    //will use the initialPopulationDensity to determine how many Xs will be randomly initialized
     for (int i = 0; i < numRows; i++)
     {
       for (int j = 0; j < numColumns; j++)
       {
-        //a[numRows][numColumns] = (rand() % (int)initialPopulationDensity);
-
         //this line will initialize the matrix with '-', for empty cells
-        a[numRows][numColumns] = '-';
+        a[i][j] = '-';
 
       }
+    }
+
+    //loop to randomly plot the full cells (X)
+    int plottedFullCells = 0;
+    while (plottedFullCells < amountFullCells)
+    {
+      //randomly generates a point in the matrix to receive the full cell (X)
+      int x = rand() % numRows;
+      int y = rand() % numColumns;
+      int is_plotted = 0;
+
+      for(int i = 0; i < numRows; i++)
+      {
+        for(int j = 0; j < numColumns; j++)
+        {
+          if (i == x && j == y)
+          {
+            if (a[i][j] == 'X')
+            {
+              is_plotted = 1;
+              break;
+            }
+          }
+        }
+      }
+
+      //plots the X at randomly generated element
+      if(is_plotted == 0)
+      {
+          a[x][y] = 'X';
+      }
+      plottedFullCells++;
     }
 
     for (int i = 0; i < numRows; i++)
     {
       for (int j = 0; j < numColumns; j++)
       {
-        cout << a[numRows][numColumns] << " ";
+        cout << a[i][j] << " ";
       }
       cout << endl;
     }
