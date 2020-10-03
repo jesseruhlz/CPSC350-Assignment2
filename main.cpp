@@ -6,6 +6,7 @@
 #include <cstdlib>
 using namespace std;
 
+//public class GameOfLife
 //just doing work in main for now to test code
 int main(int argc, char ** argv)
 {
@@ -46,7 +47,9 @@ int main(int argc, char ** argv)
     //to find amount of full cells in the user generated matrix
     int amountFullCells;
     amountFullCells = (numRows * numColumns) * initialPopulationDensity;
-    cout << amountFullCells << endl;
+    //cout << amountFullCells << endl;
+    cout << numRows << endl;
+    cout << numColumns << endl;
 
     srand((unsigned)time(NULL));
     //creates the matrix with the given input to form the size
@@ -85,7 +88,6 @@ int main(int argc, char ** argv)
           }
         }
       }
-
       //plots the X at randomly generated element
       if(is_plotted == 0)
       {
@@ -102,9 +104,49 @@ int main(int argc, char ** argv)
       }
       cout << endl;
     }
+  } //end of if statement where user inputs their own data
+
+  cout << endl;
+  //nextGenerationClassic(a,numRow,numColumns);
 
 
-  }
 
   return 0;
+}
+
+//void nextGenerationClassic(char a[][], int numRow, int numColumns)
+{
+  char[][] future = new char[numRows][numColumns];
+  for(int l = 1; l < numRows - 1; l++)
+  {
+    for (int m = 1; m < numColumns - 1; m++)
+    {
+      int aliveNeighbors = 0;
+      for (int i = -1; i <= 1; i++)
+        for (int j = -1; j <= 1; j++)
+          aliveNeighbors += a[l + i][m + j];
+      aliveNeighbors -= a[l][m];
+
+      //cell is lonely and dies
+      if (a[l][m] == 'X' && aliveNeighbors < 1)
+        future[l][m] = '-';
+      //cell is created
+      else if (a[l][m] == '-' && aliveNeighbors == 3)
+        future[l][m] == 'X';
+      //cell is dead
+      else if (a[l][m] == 'X' && aliveNeighbors >= 4)
+        future[l][m] = 'X';
+      else
+        future[l][m] = a[l][m];
+    }
+  }
+  cout << "Next Generation: " << endl;
+  for (int i = 0; i < numRows; i++)
+  {
+    for (int j = 0; j < numColumns; j++)
+    {
+      cout << future[i][j] << " ";
+    }
+    cout << endl;
+  }
 }
