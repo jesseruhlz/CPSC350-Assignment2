@@ -4,6 +4,7 @@
 #include <ctime>
 #include <iomanip>
 #include <cstdlib>
+#include <array>
 using namespace std;
 //#include "GameOfLife.h"
 void nextGenerationClassic(int **a, int x, int y)
@@ -15,27 +16,37 @@ void nextGenerationClassic(int **a, int x, int y)
   {
     future[i] = new int[y];
   }
-  for(int l = 1; l < x - 1; l++)
+  for(int l = 0; l < x; l++)
   {
-    for (int m = 1; m < y - 1; m++)
+    for (int m = 0; m < y; m++)
     {
       int aliveNeighbors = 0;
       for (int i = -1; i <= 1; i++)
         for (int j = -1; j <= 1; j++)
+        {
+          if((l+i <0) || (l+i > x-1) || (m+j <0) || (m+j > y))
+            continue;
           aliveNeighbors += a[l + i][m + j];
+        }
+
       aliveNeighbors -= a[l][m];
 
       //cell is lonely and dies
-      if (a[l][m] == 1 && aliveNeighbors < 1)
+      if (a[l][m] == 1 && aliveNeighbors <= 1)
         future[l][m] = 0;
       //cell is created
       else if (a[l][m] == 0 && aliveNeighbors == 3)
-        future[l][m] == 1;
+        future[l][m] = 1;
+      else if (a[l][m] == 1 && aliveNeighbors == 3)
+        future[l][m] = 1;
       //cell is dead
       else if (a[l][m] == 1 && aliveNeighbors >= 4)
-        future[l][m] = 1;
-      else
+        future[l][m] = 0;
+      //cell is stable
+      else if (a[l][m] == 1 && aliveNeighbors == 2)
         future[l][m] = a[l][m];
+      //else if (a[l][m] == 0 && aliveNeighbors == 2)
+        //future[l][m] = a[l][m];
     }
   }
   cout << "Next Generation: " << endl;
