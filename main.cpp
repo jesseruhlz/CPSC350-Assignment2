@@ -5,10 +5,54 @@
 #include <iomanip>
 #include <cstdlib>
 using namespace std;
+//#include "GameOfLife.h"
+void nextGenerationClassic(int **a, int x, int y)
+{
+  //char[][] future = new char[numRows][numColumns];
+  //char future[x][y];
+  int **future = new int*[x];
+  for (int i = 0; i < x; ++i)
+  {
+    future[i] = new int[y];
+  }
+  for(int l = 1; l < x - 1; l++)
+  {
+    for (int m = 1; m < y - 1; m++)
+    {
+      int aliveNeighbors = 0;
+      for (int i = -1; i <= 1; i++)
+        for (int j = -1; j <= 1; j++)
+          aliveNeighbors += a[l + i][m + j];
+      aliveNeighbors -= a[l][m];
 
-//public class GameOfLife
-//just doing work in main for now to test code
-int main(int argc, char ** argv)
+      //cell is lonely and dies
+      if (a[l][m] == 1 && aliveNeighbors < 1)
+        future[l][m] = 0;
+      //cell is created
+      else if (a[l][m] == 0 && aliveNeighbors == 3)
+        future[l][m] == 1;
+      //cell is dead
+      else if (a[l][m] == 1 && aliveNeighbors >= 4)
+        future[l][m] = 1;
+      else
+        future[l][m] = a[l][m];
+    }
+  }
+  cout << "Next Generation: " << endl;
+  for (int i = 0; i < x; i++)
+  {
+    for (int j = 0; j < y; j++)
+    {
+      cout << future[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
+
+
+
+
+int main(/*int argc, char **argv*/)
 {
   cout << "Do you want to provide a file map of the world, or would you like a random configuration?" << endl;
   cout << "If providing file map, type 'A' " << endl;
@@ -41,8 +85,14 @@ int main(int argc, char ** argv)
       cout << "Enter a valid number: "<< endl;
     }
 
+    //  char a[numRows][numColumns];
+    //creates a dynamic 2d array
+    int **a = new int*[numRows];
+    for (int i = 0; i < numRows; ++i)
+    {
+      a[i] = new int[numColumns];
+    }
 
-    char a[numRows][numColumns];
 
     //to find amount of full cells in the user generated matrix
     int amountFullCells;
@@ -60,7 +110,7 @@ int main(int argc, char ** argv)
       for (int j = 0; j < numColumns; j++)
       {
         //this line will initialize the matrix with '-', for empty cells
-        a[i][j] = '-';
+        a[i][j] = 0;
 
       }
     }
@@ -80,7 +130,7 @@ int main(int argc, char ** argv)
         {
           if (i == x && j == y)
           {
-            if (a[i][j] == 'X')
+            if (a[i][j] == 1)
             {
               is_plotted = 1;
               break;
@@ -91,7 +141,7 @@ int main(int argc, char ** argv)
       //plots the X at randomly generated element
       if(is_plotted == 0)
       {
-          a[x][y] = 'X';
+          a[x][y] = 1;
       }
       plottedFullCells++;
     }
@@ -104,49 +154,16 @@ int main(int argc, char ** argv)
       }
       cout << endl;
     }
+    /*for(int i = 0; i < numRows; ++i)
+    {
+      delete [] a[i];
+    }
+    */
+    nextGenerationClassic(a, numRows, numColumns);
+    //delete [] a;
   } //end of if statement where user inputs their own data
-
-  cout << endl;
-  //nextGenerationClassic(a,numRow,numColumns);
-
-
+  //cout << endl;
+  //a->nextGenerationClassic(*a,numRow,numColumns);
 
   return 0;
-}
-
-//void nextGenerationClassic(char a[][], int numRow, int numColumns)
-{
-  char[][] future = new char[numRows][numColumns];
-  for(int l = 1; l < numRows - 1; l++)
-  {
-    for (int m = 1; m < numColumns - 1; m++)
-    {
-      int aliveNeighbors = 0;
-      for (int i = -1; i <= 1; i++)
-        for (int j = -1; j <= 1; j++)
-          aliveNeighbors += a[l + i][m + j];
-      aliveNeighbors -= a[l][m];
-
-      //cell is lonely and dies
-      if (a[l][m] == 'X' && aliveNeighbors < 1)
-        future[l][m] = '-';
-      //cell is created
-      else if (a[l][m] == '-' && aliveNeighbors == 3)
-        future[l][m] == 'X';
-      //cell is dead
-      else if (a[l][m] == 'X' && aliveNeighbors >= 4)
-        future[l][m] = 'X';
-      else
-        future[l][m] = a[l][m];
-    }
-  }
-  cout << "Next Generation: " << endl;
-  for (int i = 0; i < numRows; i++)
-  {
-    for (int j = 0; j < numColumns; j++)
-    {
-      cout << future[i][j] << " ";
-    }
-    cout << endl;
-  }
 }
