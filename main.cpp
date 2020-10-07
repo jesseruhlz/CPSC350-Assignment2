@@ -50,12 +50,74 @@ void nextGenerationClassic(int **a, int x, int y)
         //future[l][m] = a[l][m];
     }
   }
-  cout << "Next Generation: " << endl;
+  cout << "Next Generation Classic: " << endl;
   for (int i = 0; i < x; i++)
   {
     for (int j = 0; j < y; j++)
     {
       cout << future[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
+
+void nextGenerationAugmented(int **a, int s, int t)
+{
+  //new matrix for the next generation
+  int **futureAug = new int*[s + 2];
+  for (int i = 0; i < s + 2; ++i)
+  {
+    futureAug[i] = new int[t + 2];
+  }
+  /*
+  for (int i = 0; i <= x - 1; i++)
+  {
+    for(int j = 0; j <= y - 1; j++)
+    {
+      //donut[c][d] = a[c][d];
+      futureAug[i + 1][j + 1] = a[i][j];
+    }
+  }
+  */
+  for(int l = 1; l <= s; l++)
+  {
+    for (int m = 1; m <= t; m++)
+    {
+      int aliveNeighbors = 0;
+      for (int i = -1; i <= 1; i++)
+        for (int j = -1; j <= 1; j++)
+        {
+          //if((l+i <0) || (l+i > s-1) || (m+j <0) || (m+j > t))
+            //continue;
+          aliveNeighbors += a[l + i][m + j];
+        }
+
+      aliveNeighbors -= a[l][m];
+
+      //cell is lonely and dies
+      if (a[l][m] == 1 && aliveNeighbors <= 1)
+        futureAug[l][m] = 0;
+      //cell is created
+      else if (a[l][m] == 0 && aliveNeighbors == 3)
+        futureAug[l][m] = 1;
+      else if (a[l][m] == 1 && aliveNeighbors == 3)
+        futureAug[l][m] = 1;
+      //cell is dead
+      else if (a[l][m] == 1 && aliveNeighbors >= 4)
+        futureAug[l][m] = 0;
+      //cell is stable
+      else if (a[l][m] == 1 && aliveNeighbors == 2)
+        futureAug[l][m] = a[l][m];
+      //else if (a[l][m] == 0 && aliveNeighbors == 2)
+        //future[l][m] = a[l][m];
+    }
+  }
+  cout << "Next Generation Augmented: " << endl;
+  for (int i = 1; i <= s; i++)
+  {
+    for (int j = 1; j <= t; j++)
+    {
+      cout << futureAug[i][j] << " ";
     }
     cout << endl;
   }
@@ -109,6 +171,7 @@ void donutMatrix(int **a, int s, int t)
     }
     cout << endl;
   }
+  nextGenerationAugmented(donut, s, t);
 }
 
 void mirrorMatrix(int **a, int s, int t)
@@ -160,6 +223,9 @@ void mirrorMatrix(int **a, int s, int t)
     }
     cout << endl;
   }
+  nextGenerationAugmented(mirror, s, t);
+  //nextGenerationClassic(mirror, s, t);
+  //return mirror;
 }
 
 
